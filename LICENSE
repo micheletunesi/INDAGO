@@ -1,0 +1,27 @@
+SPDX-License-Identifier: CC-BY-4.0
+
+INDAGO — Indentation Data Analysis, Graphing & Overview
+Copyright (c) 2026 Michele Tunesi
+
+The original INDAGO source code and documentation are licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+The complete, authoritative license terms are incorporated by reference:
+https://creativecommons.org/licenses/by/4.0/legalcode.en
+
+Plain-language license summary:
+https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt the licensed material, including commercially, subject
+to the license terms. Give appropriate credit, provide a license link, and
+indicate changes. Do not imply endorsement. No warranties are provided.
+This notice summarizes the grant; the linked legal code governs its terms.
+
+Suggested attribution:
+INDAGO v0.1.0 — Indentation Data Analysis, Graphing & Overview,
+by Michele Tunesi, licensed under CC BY 4.0.
+
+Institutional logos, names, trademarks and third-party dependencies are not
+relicensed by this notice. Their respective rights and licenses remain with
+their owners. Imported measurement files and user-generated results are not
+licensed under CC BY 4.0 merely because they are processed with INDAGO.
