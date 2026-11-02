@@ -13,6 +13,8 @@ from .analysis import (cycle_averages, cycle_x, read_parameters, normalized_dept
 from .export import export_summary
 from . import __version__ as VERSION, APP_NAME
 from .about import build_about
+from .plotting import copy_cycle_figure
+from .sorting import natural_path_key
 
 
 
@@ -115,6 +117,8 @@ class IndagoApp(tk.Tk):
         results_controls.pack(fill='x')
         self.average_button = ttk.Button(results_controls, text='Show averages ± uncertainty', command=self.toggle_averages)
         self.average_button.pack(side='left')
+        ttk.Button(results_controls, text='Open plot in new window',
+                   command=self.open_cycle_plot).pack(side='right')
         ttk.Label(results_controls, text='Included curves only · uncertainty = 2 × s / √n').pack(side='left', padx=12)
         fit_controls = self.fit_controls = ttk.Frame(right, padding=(6, 0))
         fit_controls.columnconfigure((0, 1), weight=1, uniform='cycle_bounds')
@@ -212,7 +216,8 @@ class IndagoApp(tk.Tk):
         curves, notices = [], []
         try:
             files = sorted((p for p in folder.rglob('*') if p.is_file()
-                            and not any(s.startswith('.') for s in p.relative_to(folder).parts)), key=lambda p: str(p).lower())
+                            and not any(s.startswith('.') for s in p.relative_to(folder).parts)),
+                           key=lambda p: natural_path_key(p.relative_to(folder)))
             for i, path in enumerate(files):
                 name = str(path.relative_to(folder))
                 self.events.put(('progress', f'Reading {i+1}/{len(files)}: {name}'))
@@ -283,6 +288,25 @@ class IndagoApp(tk.Tk):
         text.pack(fill='both', expand=True)
         text.insert('1.0', self.details)
         text.configure(state='disabled')
+
+    def open_cycle_plot(self):
+        """Open an independent, resizable snapshot with the current fit overlays."""
+        window = tk.Toplevel(self)
+        window.title(f'{APP_NAME} — {self.label(self.prop.get())} — plot snapshot')
+        window.geometry('1100x800')
+        figure = copy_cycle_figure(self.figure)
+        canvas = FigureCanvasTkAgg(figure, master=window)
+        canvas.get_tk_widget().pack(fill='both', expand=True)
+        toolbar = NavigationToolbar2Tk(canvas, window)
+        toolbar.update()
+        ttk.Label(window, text='Snapshot of the current analysis. F11: full screen · Escape: exit full screen',
+                  padding=6).pack(fill='x')
+        window.bind('<F11>', lambda event: window.attributes(
+            '-fullscreen', not window.attributes('-fullscreen')))
+        window.bind('<Escape>', lambda event: window.attributes('-fullscreen', False))
+        # Keep the canvas and toolbar alive until this window is closed.
+        window.plot_canvas, window.plot_toolbar = canvas, toolbar
+        canvas.draw_idle()
 
     def export_excel(self):
         if not any(c['cycles'] for c in self.curves):

@@ -11,7 +11,7 @@ from indago.analysis import regression_points, linear_regression
 class RegressionPlotTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        source = Path(__file__).resolve().parents[2] / 'indago' / 'ui.py'
+        source = Path(__file__).resolve().parents[1] / 'indago' / 'ui.py'
         tree = ast.parse(source.read_text(encoding='utf-8'))
         app = next(n for n in tree.body if isinstance(n, ast.ClassDef))
         method = next(n for n in app.body if isinstance(n, ast.FunctionDef) and n.name == 'draw_regression')

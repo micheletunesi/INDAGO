@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.1 — 2026-11-02
+
+Maintenance release with a small feature and a bug fix.
+
+### Added
+
+- **Open plot in new window** opens an independent snapshot of the selected cycle property (HIT, EIT or any available property), preserving averages, uncertainty bars, regression overlays and current axis limits. Resize or maximize the window, use its zoom/pan/save toolbar, or press F11 for full screen and Escape to exit. Open a new snapshot to capture later analysis changes.
+
+### Fixed
+
+- Measurement files and numbered subfolders use natural numeric ordering: 1, 2, 3, …, 10, 11, 12. Text comparisons remain case-insensitive; zero-padded names have deterministic ordering.
+
+### Maintenance
+
+- Moved automated tests from `assets/tests` to the top-level `tests` directory; assets now contain only application images.
+- Shortened the README by removing obsolete repository-creation instructions and keeping detailed history and proposed work in this changelog.
+- GitHub Actions now installs Matplotlib so the plot snapshot test runs rather than being skipped.
+- Made the suggested attribution in LICENSE independent of the application version; license terms are unchanged.
+
 ## 0.1.0 — 2026-10-29
 
 Initial local desktop release, developed by Michele Tunesi.

@@ -1,4 +1,4 @@
-# INDAGO v0.1.0
+# INDAGO v0.1.1
 
 **Indentation Data Analysis, Graphing & Overview**
 
@@ -41,6 +41,8 @@ Click **Show averages ± uncertainty** to switch the cycle-results panel to aver
 
 Click **Export Excel summary…** to save an `.xlsx` workbook with one row per indentation and cycle. It includes all reported properties (HIT, EIT, hc, etc.), units in column headers, the source filename and inclusion status. All loaded curves are exported, including excluded curves, which appear gray and are marked No in the Included column. Missing values remain blank. This exports the reported cycle summaries, independent of the selected plot property or average view. The header is frozen and filterable. Export uses Python's standard library and needs no additional installation.
 
+Files are listed in natural numeric order: for example, sample1, sample2, sample3, …, sample10, sample11. This also applies to numbered subfolders.
+
 ## Linear regression
 
 Select **Normalized depth** to reveal **Linear regression**, its results and the **First cycle** and **Last cycle** sliders. These controls and regression overlays hide on every other axis. In normalized view a faint gray vertical reference marks **x = 1.5** behind the data. Adjust the sliders to choose an inclusive cycle range (for example 2–12). The fit automatically follows the property, normalization parameters and inclusion flags. A crossed range shows a message until corrected. In individual mode the fit pools all valid included points; in average mode it fits one valid mean per cycle. The fit is unweighted in both modes, and selecting a filename for highlighting does not limit the fit to that file. Regression settings are retained when switching axes.
@@ -51,26 +53,15 @@ Dashed vertical bounds labeled **Fit-** and **Fit+** above the plot mark the fit
 
 The scrollable **Linear regression results** area shows intercept, intercept standard error, slope, slope standard error, Pearson R, R², adjusted R², N, residual degrees of freedom, residual standard deviation, RMSE, SSE and fitted x range. Intercept uncertainty is **±2 × its OLS standard error**, estimated from residual variance using N−2 degrees of freedom; it is not an exact 95% Student-t interval. Ordinary least squares assumes independent errors; repeated cycles within an indentation may be correlated. At least three valid points and two distinct x values are required. A constant property has undefined R and R². Regression results are displayed in the app; Excel export remains the reported per-cycle summary.
 
+Click **Open plot in new window** beside the averages button to open the current cycle-property plot (HIT, EIT or any selected property) as an independent snapshot. It includes regression overlays, uncertainty bars, exclusions, highlighting and current axis limits. Resize or maximize the window, or press **F11** for full screen and **Escape** to exit full screen. Its toolbar supports zoom, pan and saving. Changes in the main analysis do not change an existing snapshot; click the button again for a new snapshot. This button is available on every results axis.
+
 ## About tab
 
-The scrollable **About** tab shows **INDAGO v0.1.0**, its expanded name, creator and institutional affiliation, an Italian explanation of the name, and an abstract of the application's capabilities. **README**, **Changelog** and **License** links open bundled documents inside the app, offline. The license is identified as Creative Commons Attribution 4.0 International (CC BY 4.0), with an additional link to its official terms. Department, author and etymology sources link to the official websites. Logos are read from `assets/logos` beside the app, including the supplied `PoliTO_DIGEP.jpg`; an additional logo placeholder is shown until another image is provided. PNG, JPG/JPEG and GIF images are supported. Logo preview uses Pillow, included as a Matplotlib dependency.
+The scrollable **About** tab shows **INDAGO v0.1.1**, its expanded name, creator and institutional affiliation, an Italian explanation of the name, and an abstract of the application's capabilities. **README**, **Changelog** and **License** links open bundled documents inside the app, offline. The license is identified as Creative Commons Attribution 4.0 International (CC BY 4.0), with an additional link to its official terms. Department, author and etymology sources link to the official websites. Logos are read from `assets/logos` beside the app, including the supplied `PoliTO_DIGEP.jpg`; an additional logo placeholder is shown until another image is provided. PNG, JPG/JPEG and GIF images are supported. Logo preview uses Pillow, included as a Matplotlib dependency.
 
-## Version history
+## Release notes
 
-| Version | Date | Summary |
-| --- | --- | --- |
-| 0.1.0 | 2026-10-29 | Initial desktop release: curve visualization and exclusion, normalized depth, cycle averages, regression and Excel export; INDAGO branding and documentation. |
-
-The project used CMC Curve Explorer and INDIGO as development labels before adopting INDAGO within version 0.1.0. See [CHANGELOG.md](CHANGELOG.md) for the detailed history.
-
-## Planned versions
-
-These are proposed directions, not released features or delivery commitments.
-
-| Version | Proposed scope |
-| --- | --- |
-| 0.2.0 | Save/restore analysis settings; export averages and regression statistics; improve plot export controls and documentation. |
-| Later | Additional instrument formats, per-indentation film thickness, and evaluation of weighted/robust regression. |
+Version **0.1.1** adds an independent cycle-plot window with full-screen viewing and fixes numeric filename ordering. See [CHANGELOG.md](CHANGELOG.md) for release history and proposed future work.
 
 ## License
 
@@ -78,47 +69,33 @@ Copyright © 2026 Michele Tunesi. The original project code and documentation ar
 
 Institutional logos and third-party dependencies retain their own rights and licenses. Processing a measurement file does not change ownership or license its data or results under this project license.
 
-Suggested attribution: *INDAGO v0.1.0 — Indentation Data Analysis, Graphing & Overview, by Michele Tunesi, licensed under CC BY 4.0.*
+Suggested attribution: *INDAGO v0.1.1 — Indentation Data Analysis, Graphing & Overview, by Michele Tunesi, licensed under CC BY 4.0.*
 
-## Project layout and checks
+## Project layout
 
 ```text
-Start INDAGO.bat        Windows launcher
-indago_app.py           Python entry point
+indago_app.py        Python entry point
+Start INDAGO.bat    Windows launcher
 requirements.txt    Runtime dependency
-README.md           User guide, creator and version roadmap
-CHANGELOG.md        Release history
-LICENSE             CC BY 4.0 license notice
-indago/
-  __init__.py       Version
-  ui.py             Desktop interface and plotting
-  about.py          About tab and offline documentation viewer
-  analysis.py       Normalization, averaging and regression
-  parser.py         Instrument text reader
-  export.py         XLSX summary writer
-assets/
-  logos/            About-tab images
-  tests/            Automated tests
+indago/             Application code: UI, analysis, parsing and export
+assets/logos/       About-tab images
+tests/              Automated tests (not needed to run the app)
+.github/workflows/  Automated checks on GitHub
+README.md           User guide
+CHANGELOG.md        Release history and proposed future work
+LICENSE             License notice
 ```
 
-From the project folder, run tests with:
+The About tab reads README.md, CHANGELOG.md and LICENSE at runtime, so keep these documents alongside the entry point. Keep `.gitignore` and `.gitattributes` in the repository to exclude generated files and preserve cross-platform line endings.
+
+## Development checks
+
+Install the runtime dependency, then run:
 
 ```powershell
-python -B -m unittest discover -s assets/tests -v
+python -B -m unittest discover -s tests -v
 ```
 
-The numerical, parser and export tests use only the Python standard library. Plot-overlay logic is tested without a desktop; visual GUI inspection requires Tkinter and Matplotlib. The former HTML/JavaScript prototype has been removed.
+The numerical, parser and export tests use only the standard library. The plot snapshot test also uses Matplotlib; it is skipped if Matplotlib is missing. Tests run without opening desktop windows. GitHub Actions installs the runtime dependency and runs the suite on Windows and Linux with Python 3.10 and 3.14.
 
-## GitHub repository and first release
-
-Suggested repository name: **indago**. Repository description:
-
-> Local Python GUI for nanoindentation curve analysis, normalized-depth regression, uncertainty visualization and Excel summaries.
-
-Use **main** as the default branch. The first commit can be named **Initial release: INDAGO v0.1.0**. Create a **v0.1.0** tag and an **INDAGO v0.1.0** GitHub release from that commit after uploading. The branch holds ongoing development; the tag marks the version snapshot. For later work, use descriptive branches such as `feature/save-settings` or `fix/cycle-selection`.
-
-For a manual upload, preserve the `indago`, `assets` and `.github` directory structure and include `.gitignore`, `.gitattributes`, the launcher, entry point, requirements and documentation. Do not upload `__pycache__`, virtual environments, local measurement data or generated reports. The browser upload does not apply your local `.gitignore` automatically. Choose not to auto-generate a second README, license or gitignore when creating the repository; these are already provided.
-
-The bundled GitHub Actions workflow runs syntax checks and automated tests on Windows and Linux with Python 3.10 and 3.14. It does not install runtime GUI dependencies or launch the desktop application. This workflow has not run on GitHub yet; locally, tests were checked using Python 3.12. The desktop GUI has not received visual verification in the development environment.
-
-Release notes can use the 0.1.0 entry in [CHANGELOG.md](CHANGELOG.md). The planned-versions section lists proposals rather than released functionality. The existing CC BY 4.0 license and institutional-logo exceptions remain unchanged.
+For a release, commit the update, push the branch, and create a matching version tag (for example `v0.1.1`). Use the corresponding changelog entry for release notes. Keep generated caches, local measurement files and exported workbooks out of version control.

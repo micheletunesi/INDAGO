@@ -20,7 +20,7 @@ class Value:
 class CycleControlTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        source = Path(__file__).resolve().parents[2] / 'indago' / 'ui.py'
+        source = Path(__file__).resolve().parents[1] / 'indago' / 'ui.py'
         app = next(n for n in ast.parse(source.read_text(encoding='utf-8')).body if isinstance(n, ast.ClassDef))
         methods = [n for n in app.body if isinstance(n, ast.FunctionDef)
                    and n.name in ('commit_cycle', 'cycle_slider_changed')]

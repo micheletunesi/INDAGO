@@ -25,7 +25,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
+      - name: Install runtime dependency
+        run: python -m pip install -r requirements.txt
       - name: Check Python syntax
-        run: python -m compileall -q indago indago_app.py assets/tests
-      - name: Run standard-library tests
-        run: python -B -m unittest discover -s assets/tests -v
+        run: python -m compileall -q indago indago_app.py tests
+      - name: Run tests
+        env:
+          MPLBACKEND: Agg
+        run: python -B -m unittest discover -s tests -v
